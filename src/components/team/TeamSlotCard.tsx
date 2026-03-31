@@ -22,7 +22,16 @@ export function TeamSlotCard({
       </Text>
 
       {isEmpty ? (
-        <Text className='mt-2 text-body text-text-muted'>Empty slot</Text>
+        <View className='flex-row mt-2 gap-3 items-center'>
+          <Text className='text-body text-text-muted'>Empty slot</Text>
+          <TouchableOpacity
+            onPress={() => {}}
+            activeOpacity={0.85}
+            className='rounded-card bg-primary px-4 py-2'
+          >
+            <Text className='text-body text-white'>+ Add Pokémon</Text>
+          </TouchableOpacity>
+        </View>
       ) : (
         <>
           <View className='mt-3 flex-row items-center'>

@@ -22,11 +22,19 @@ export default function PokemonDetailScreen() {
       return
     }
 
-    const wasAdded = addPokemonToFirstEmptySlot(pokemon.id)
+    const result = addPokemonToFirstEmptySlot(pokemon.id)
 
-    if (!wasAdded) {
-      Alert.alert('Team full', 'Your team already has 6 Pokémon.')
-      return
+    if (!result.ok) {
+      if (result.reason === 'TEAM_FULL') {
+        return Alert.alert('Team full', 'Your team already has 6 Pokémon.')
+      } else if (result.reason === 'DUPLICATE_POKEMON') {
+        return Alert.alert(
+          'Duplicate Pokémon',
+          `${pokemon.name} is already in your team.`
+        )
+      } else {
+        return Alert.alert('Error', 'Could not add Pokémon to team.')
+      }
     }
 
     Alert.alert('Added to team', `${pokemon.name} was added to your team.`)

@@ -3,13 +3,14 @@ import { persist } from 'zustand/middleware'
 
 import { zustandStorage } from '@/src/data/storage/zustandStorage'
 import type { SavedTeam } from '@/src/domain/team/types'
+import { normalizeTeamName } from '../domain/team/utils'
 
 type SavedTeamsState = {
   teams: SavedTeam[]
   hasHydrated: boolean
   setHasHydrated: (value: boolean) => void
-  saveCurrentTeam: (name: string, pokemonIds: (string | null)[]) => void
-  renameTeam: (teamId: string, newName: string) => void
+  saveCurrentTeam: (name: string, pokemonIds: (string | null)[]) => boolean
+  renameTeam: (teamId: string, newName: string) => boolean
   deleteTeam: (teamId: string) => void
 }
 
@@ -24,7 +25,16 @@ export const useSavedTeamsStore = create<SavedTeamsState>()(
         const trimmedName = name.trim()
 
         if (!trimmedName) {
-          return
+          return false
+        }
+
+        const normalizedName = normalizeTeamName(trimmedName)
+        const alreadyExists = get().teams.some(
+          (team) => normalizeTeamName(team.name) === normalizedName
+        )
+
+        if (alreadyExists) {
+          return false
         }
 
         const now = new Date().toISOString()
@@ -40,13 +50,26 @@ export const useSavedTeamsStore = create<SavedTeamsState>()(
         set({
           teams: [newTeam, ...get().teams]
         })
+
+        return true
       },
 
       renameTeam: (teamId, newName) => {
         const trimmedName = newName.trim()
 
         if (!trimmedName) {
-          return
+          return false
+        }
+
+        const normalizedName = normalizeTeamName(trimmedName)
+        const alreadyExists = get().teams.some(
+          (team) =>
+            team.id !== teamId &&
+            normalizeTeamName(team.name) === normalizedName
+        )
+
+        if (alreadyExists) {
+          return false
         }
 
         set({
@@ -60,6 +83,8 @@ export const useSavedTeamsStore = create<SavedTeamsState>()(
               : team
           )
         })
+
+        return true
       },
 
       deleteTeam: (teamId) => {

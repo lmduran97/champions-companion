@@ -35,7 +35,11 @@ export default function EditTeamScreen() {
       return
     }
 
-    renameTeam(team.id, trimmedName)
+    const wasRenamed = renameTeam(team.id, trimmedName)
+    if (!wasRenamed) {
+      Alert.alert('Name already in use', 'Choose a different team name.')
+      return
+    }
 
     Alert.alert('Team updated', `"${trimmedName}" was updated successfully.`, [
       {

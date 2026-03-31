@@ -26,7 +26,11 @@ export default function SaveTeamScreen() {
       return
     }
 
-    saveCurrentTeam(trimmedName, slots)
+    const wasSaved = saveCurrentTeam(trimmedName, slots)
+    if (!wasSaved) {
+      Alert.alert('Name already in use', 'Choose a different team name.')
+      return
+    }
 
     Alert.alert('Team saved', `"${trimmedName}" was saved successfully.`, [
       {
