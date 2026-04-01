@@ -27,6 +27,39 @@ export type StatBlock = {
   speed: number
 }
 
+export type NatureName =
+  | 'hardy'
+  | 'lonely'
+  | 'adamant'
+  | 'naughty'
+  | 'brave'
+  | 'bold'
+  | 'docile'
+  | 'impish'
+  | 'lax'
+  | 'relaxed'
+  | 'modest'
+  | 'mild'
+  | 'bashful'
+  | 'rash'
+  | 'quiet'
+  | 'calm'
+  | 'gentle'
+  | 'careful'
+  | 'quirky'
+  | 'sassy'
+  | 'timid'
+  | 'hasty'
+  | 'jolly'
+  | 'naive'
+  | 'serious'
+
+export type Nature = {
+  name: NatureName
+  increasedStat: keyof StatBlock | null
+  decreasedStat: keyof StatBlock | null
+}
+
 export type Ability = {
   id: string
   name: string
@@ -72,4 +105,19 @@ export type Pokemon = {
   generation?: number
   isEligible: boolean
   hasMega?: boolean
+}
+
+type TeamPokemonBase = Pick<
+  Pokemon,
+  'id' | 'name' | 'types' | 'spriteUrl' | 'artworkUrl' | 'abilities' | 'moves'
+>
+
+export type TeamPokemon = TeamPokemonBase & {
+  battleConfig?: {
+    nature: Nature | null
+    ability: Ability | null
+    heldItem: string | null
+    moves: [Move | null, Move | null, Move | null, Move | null]
+    statPoints: StatBlock
+  }
 }

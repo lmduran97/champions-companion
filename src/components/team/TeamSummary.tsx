@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native'
 
-import { TypeBadge } from '@/src/components/common/TypeBadge'
+import { TypeBadge } from '@/src/components/common'
 import type { PokemonType } from '@/src/domain/pokemon/types'
 
 type TeamSummaryProps = {

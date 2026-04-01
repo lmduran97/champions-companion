@@ -13,7 +13,7 @@ export function SearchInput({
   placeholder = 'Search'
 }: SearchInputProps) {
   return (
-    <View className='rounded-card border border-border bg-card px-4 py-3'>
+    <View className='rounded-card border border-border bg-card p-2'>
       <TextInput
         value={value}
         onChangeText={onChangeText}

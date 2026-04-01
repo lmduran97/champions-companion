@@ -23,6 +23,8 @@
   --color-danger: #e85d75;
   --color-info: #55b6f7;
 
+  --color-overlay: rgba(68, 68, 68, 0.3);
+
   /* Radius */
   --radius-card: 16px;
   --radius-large: 20px;
@@ -34,4 +36,5 @@
   --text-body-large: 16px;
   --text-body: 14px;
   --text-caption: 12px;
+  --text-small: 10px;
 }

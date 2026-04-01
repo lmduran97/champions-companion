@@ -1,23 +1,20 @@
 import { router } from 'expo-router'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 
+import { PokemonSelectorModal } from '@/src/components/builder'
 import { EmptyState, LoadingView, Screen } from '@/src/components/common'
 import { TeamSlotCard, TeamSummary } from '@/src/components/team'
 import { useBuilderState } from '@/src/features/builder/hooks/useBuilderState'
 import { useBuilderTeam } from '@/src/features/builder/hooks/useBuilderTeam'
+import { useState } from 'react'
 
 export default function BuilderScreen() {
   const { slots, summary, isLoading, error, removePokemonFromSlot, clearTeam } =
     useBuilderTeam()
   const { isEmpty } = useBuilderState()
 
-  const handleGoToSave = () => {
-    if (isEmpty) {
-      return
-    }
-
-    router.push('/team/save')
-  }
+  const [isPokemonSelectorModalVisible, setPokemonSelectorModalVisible] =
+    useState(false)
 
   if (isLoading) {
     return (
@@ -35,8 +32,20 @@ export default function BuilderScreen() {
     )
   }
 
+  const handleGoToSave = () => {
+    if (isEmpty) {
+      return
+    }
+
+    router.push('/team/save')
+  }
+
   return (
-    <Screen scrollable>
+    <Screen>
+      <PokemonSelectorModal
+        visible={isPokemonSelectorModalVisible}
+        onClose={() => setPokemonSelectorModalVisible(false)}
+      />
       <View className='flex-row items-center justify-between'>
         <Text className='text-title font-bold text-text-primary'>Builder</Text>
 
@@ -72,17 +81,27 @@ export default function BuilderScreen() {
         />
       </View>
 
-      <View className='mt-4 gap-3'>
-        {slots.map((slot, index) => (
-          <TeamSlotCard
-            key={index}
-            slotNumber={slot.slotNumber}
-            pokemon={slot.pokemon}
-            onRemove={
-              slot.pokemonId ? () => removePokemonFromSlot(index) : undefined
-            }
-          />
-        ))}
+      <View className='mt-4 flex-1'>
+        <FlatList
+          data={slots}
+          keyExtractor={(item) => item.pokemonId || `empty-${item.slotNumber}`}
+          contentContainerStyle={{ paddingBottom: 24 }}
+          ItemSeparatorComponent={() => <View className='h-3' />}
+          renderItem={({ item }) => (
+            <TeamSlotCard
+              key={item.slotNumber}
+              slotNumber={item.slotNumber}
+              pokemon={item.pokemon}
+              onRemove={
+                item.pokemonId
+                  ? () => removePokemonFromSlot(item.slotNumber - 1)
+                  : undefined
+              }
+              onAdd={() => setPokemonSelectorModalVisible(true)}
+            />
+          )}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
     </Screen>
   )

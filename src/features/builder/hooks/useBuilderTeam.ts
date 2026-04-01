@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 
-import type { Pokemon, PokemonType } from '@/src/domain/pokemon/types'
+import type { PokemonType, TeamPokemon } from '@/src/domain/pokemon/types'
 import { useBuilderStore } from '@/src/store/useBuilderStore'
 import { usePokemonList } from '../../pokedex/hooks/usePokemonList'
 
 type BuilderTeamSlot = {
   slotNumber: number
   pokemonId: string | null
-  pokemon?: Pokemon
+  pokemon?: TeamPokemon
 }
 
 type BuilderTeamSummary = {
@@ -42,18 +42,18 @@ export function useBuilderTeam(): UseBuilderTeamReturn {
   }, [slots, pokemonMap])
 
   const summary = useMemo<BuilderTeamSummary>(() => {
-    const selectedPokemon = enrichedSlots
+    const selectedPokemons = enrichedSlots
       .map((slot) => slot.pokemon)
-      .filter((pokemon): pokemon is Pokemon => Boolean(pokemon))
+      .filter((pokemon): pokemon is TeamPokemon => Boolean(pokemon))
 
     const typeSet = new Set<PokemonType>()
 
-    selectedPokemon.forEach((pokemon) => {
+    selectedPokemons.forEach((pokemon) => {
       pokemon.types.forEach((type) => typeSet.add(type))
     })
 
     return {
-      selectedCount: selectedPokemon.length,
+      selectedCount: selectedPokemons.length,
       totalSlots: 6,
       uniqueTypes: Array.from(typeSet)
     }

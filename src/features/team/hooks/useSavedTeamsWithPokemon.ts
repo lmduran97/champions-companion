@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { Pokemon } from '@/src/domain/pokemon/types'
+import { TeamPokemon } from '@/src/domain/pokemon/types'
 import type { SavedTeam } from '@/src/domain/team/types'
 import { usePokemonList } from '@/src/features/pokedex/hooks/usePokemonList'
 import { useSavedTeamsStore } from '@/src/store/useSavedTeamsStore'
@@ -8,7 +8,7 @@ import { useSavedTeamsStore } from '@/src/store/useSavedTeamsStore'
 type SavedTeamWithPokemonPreview = {
   team: SavedTeam
   selectedCount: number
-  previewSlots: (Pokemon | null)[]
+  previewSlots: (TeamPokemon | null)[]
 }
 
 type UseSavedTeamsWithPokemonReturn = {

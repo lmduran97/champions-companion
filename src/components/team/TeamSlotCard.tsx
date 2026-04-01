@@ -1,17 +1,20 @@
-import { Pokemon } from '@/src/domain/pokemon/types'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
+
+import { TeamPokemon } from '@/src/domain/pokemon/types'
 import { TypeBadge } from '../common'
 
 type TeamSlotCardProps = {
   slotNumber: number
-  pokemon?: Pokemon
+  pokemon?: TeamPokemon
   onRemove?: () => void
+  onAdd?: () => void
 }
 
 export function TeamSlotCard({
   slotNumber,
   pokemon,
-  onRemove
+  onRemove,
+  onAdd
 }: TeamSlotCardProps) {
   const isEmpty = !pokemon
 
@@ -25,7 +28,7 @@ export function TeamSlotCard({
         <View className='flex-row mt-2 gap-3 items-center'>
           <Text className='text-body text-text-muted'>Empty slot</Text>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={onAdd}
             activeOpacity={0.85}
             className='rounded-card bg-primary px-4 py-2'
           >
@@ -48,10 +51,6 @@ export function TeamSlotCard({
             </View>
 
             <View className='ml-4 flex-1'>
-              <Text className='text-caption text-text-secondary'>
-                #{pokemon.dexNumber.toString().padStart(3, '0')}
-              </Text>
-
               <Text className='mt-1 text-subtitle font-semibold text-text-primary'>
                 {pokemon.name}
               </Text>

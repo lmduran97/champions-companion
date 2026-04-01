@@ -22,7 +22,7 @@ export function PokemonStats({ stats }: PokemonStatsProps) {
         Base Stats
       </Text>
 
-      <View className='mt-4 gap-3'>
+      <View className='mt-4 gap-1'>
         {statRows.map((stat) => {
           const value = stats[stat.key]
           const widthPercentage = Math.min((value / 180) * 100, 100)

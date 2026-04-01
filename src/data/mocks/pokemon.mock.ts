@@ -382,5 +382,63 @@ export const MOCK_POKEMON: Pokemon[] = [
     generation: 4,
     isEligible: true,
     hasMega: true
+  },
+  {
+    id: 'mimikyu',
+    dexNumber: 778,
+    slug: 'mimikyu',
+    name: 'Mimikyu',
+    types: ['ghost', 'fairy'],
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/778.png',
+    artworkUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/778.png',
+    stats: {
+      hp: 55,
+      attack: 90,
+      defense: 80,
+      specialAttack: 50,
+      specialDefense: 105,
+      speed: 96
+    },
+    abilities: [
+      {
+        id: 'disguise',
+        name: 'Disguise',
+        description:
+          'The Pokémon is protected by its disguise, which prevents damage from an attack. The disguise can be busted only once.'
+      }
+    ],
+    moves: [
+      {
+        id: 'play-rough',
+        name: 'Play Rough',
+        type: 'fairy',
+        category: 'physical',
+        power: 90,
+        accuracy: 90,
+        pp: 10
+      },
+      {
+        id: 'shadow-claw',
+        name: 'Shadow Claw',
+        type: 'ghost',
+        category: 'physical',
+        power: 70,
+        accuracy: 100,
+        pp: 15
+      },
+      {
+        id: 'phantom-force',
+        name: 'Phantom Force',
+        type: 'ghost',
+        category: 'physical',
+        power: 90,
+        accuracy: 100,
+        pp: 10
+      }
+    ],
+    generation: 7,
+    isEligible: true
   }
 ]
