@@ -8,6 +8,7 @@ import {
   PokemonMoves,
   PokemonStats
 } from '@/src/components/pokemon'
+import { TeamPokemon } from '@/src/domain/pokemon/types'
 import { usePokemonDetail } from '@/src/features/pokedex/hooks/usePokemonDetail'
 import { useBuilderStore } from '@/src/store/useBuilderStore'
 
@@ -22,7 +23,31 @@ export default function PokemonDetailScreen() {
       return
     }
 
-    const result = addPokemonToFirstEmptySlot(pokemon.id)
+    const pokemonWithConfig = {
+      id: pokemon.id,
+      name: pokemon.name,
+      types: pokemon.types,
+      spriteUrl: pokemon.spriteUrl,
+      artworkUrl: pokemon.artworkUrl,
+      abilities: pokemon.abilities,
+      moves: pokemon.moves,
+      battleConfig: {
+        nature: null,
+        ability: null,
+        heldItem: null,
+        moves: [null, null, null, null],
+        statPoints: {
+          hp: 0,
+          attack: 0,
+          defense: 0,
+          specialAttack: 0,
+          specialDefense: 0,
+          speed: 0
+        }
+      }
+    } as TeamPokemon
+
+    const result = addPokemonToFirstEmptySlot(pokemonWithConfig)
 
     if (!result.ok) {
       if (result.reason === 'TEAM_FULL') {

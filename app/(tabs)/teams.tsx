@@ -3,7 +3,7 @@ import { Alert, Text, View } from 'react-native'
 
 import { EmptyState, LoadingView, Screen } from '@/src/components/common'
 import { SavedTeamCard } from '@/src/components/team'
-import { useSavedTeamsWithPokemon } from '@/src/features/team/hooks/useSavedTeamsWithPokemon'
+import { TeamPokemon } from '@/src/domain/pokemon/types'
 import { useBuilderStore } from '@/src/store/useBuilderStore'
 import { useSavedTeamsStore } from '@/src/store/useSavedTeamsStore'
 
@@ -11,14 +11,12 @@ export default function TeamsScreen() {
   const {
     teams,
     hasHydrated: teamsHasHydrated,
-    error,
-    isLoading
-  } = useSavedTeamsWithPokemon()
-  const { deleteTeam } = useSavedTeamsStore()
+    deleteTeam
+  } = useSavedTeamsStore()
   const { setSlots, hasHydrated: builderHasHydrated } = useBuilderStore()
 
-  const handleLoadTeam = (pokemonIds: (string | null)[]) => {
-    setSlots(pokemonIds)
+  const handleLoadTeam = (pokemons: (TeamPokemon | null)[]) => {
+    setSlots(pokemons)
     Alert.alert('Team loaded', 'The team was loaded into the builder.')
     router.push('/builder')
   }
@@ -38,7 +36,7 @@ export default function TeamsScreen() {
     )
   }
 
-  if (!teamsHasHydrated || !builderHasHydrated || isLoading) {
+  if (!teamsHasHydrated || !builderHasHydrated) {
     return (
       <Screen>
         <LoadingView message='Loading saved teams...' />
@@ -46,10 +44,10 @@ export default function TeamsScreen() {
     )
   }
 
-  if (error) {
+  if (!teams) {
     return (
       <Screen>
-        <EmptyState title='Something went wrong' description={error} />
+        <EmptyState title='Something went wrong' />
       </Screen>
     )
   }
@@ -68,13 +66,11 @@ export default function TeamsScreen() {
             description='Save a team from the builder and it will appear here.'
           />
         ) : (
-          teams.map(({ team, previewSlots, selectedCount }) => (
+          teams.map((team) => (
             <SavedTeamCard
-              key={team.id}
+              key={team.id + '-' + team.name.trim().replace(/\s/g, '')}
               team={team}
-              selectedCount={selectedCount}
-              previewSlots={previewSlots}
-              onLoad={() => handleLoadTeam(team.pokemonIds)}
+              onLoad={() => handleLoadTeam(team.pokemons)}
               onRename={() =>
                 router.push({
                   pathname: '/team/edit/[id]',

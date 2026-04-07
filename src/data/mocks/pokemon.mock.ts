@@ -436,6 +436,15 @@ export const MOCK_POKEMON: Pokemon[] = [
         power: 90,
         accuracy: 100,
         pp: 10
+      },
+      {
+        id: 'dark-pulse',
+        name: 'Dark Pulse',
+        type: 'dark',
+        category: 'special',
+        power: 80,
+        accuracy: 100,
+        pp: 15
       }
     ],
     generation: 7,

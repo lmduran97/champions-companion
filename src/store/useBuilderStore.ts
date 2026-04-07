@@ -2,8 +2,9 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import { zustandStorage } from '@/src/data/storage/zustandStorage'
+import { TeamPokemon } from '../domain/pokemon/types'
 
-type BuilderSlot = string | null
+type BuilderSlot = TeamPokemon | null
 
 type AddPokemonToFirstEmptySlotResult =
   | { ok: true }
@@ -17,7 +18,7 @@ type BuilderState = {
   hasHydrated: boolean
   setHasHydrated: (value: boolean) => void
   addPokemonToFirstEmptySlot: (
-    pokemonId: string
+    pokemon: TeamPokemon
   ) => AddPokemonToFirstEmptySlotResult
   removePokemonFromSlot: (index: number) => void
   clearTeam: () => void
@@ -33,7 +34,7 @@ export const useBuilderStore = create<BuilderState>()(
 
       hasHydrated: false,
       setHasHydrated: (value) => set({ hasHydrated: value }),
-      addPokemonToFirstEmptySlot: (pokemonId) => {
+      addPokemonToFirstEmptySlot: (pokemon) => {
         const { slots } = get()
         const emptyIndex = slots.findIndex((slot) => slot === null)
 
@@ -44,13 +45,13 @@ export const useBuilderStore = create<BuilderState>()(
           }
         }
 
-        const alreadyExists = slots.some((slot) => slot === pokemonId)
+        const alreadyExists = slots.some((slot) => slot?.id === pokemon.id)
         if (alreadyExists) {
           return { ok: false, reason: 'DUPLICATE_POKEMON' }
         }
 
         const nextSlots = [...slots]
-        nextSlots[emptyIndex] = pokemonId
+        nextSlots[emptyIndex] = pokemon
 
         set({
           slots: nextSlots

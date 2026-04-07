@@ -2,11 +2,9 @@ import { useMemo } from 'react'
 
 import type { PokemonType, TeamPokemon } from '@/src/domain/pokemon/types'
 import { useBuilderStore } from '@/src/store/useBuilderStore'
-import { usePokemonList } from '../../pokedex/hooks/usePokemonList'
 
 type BuilderTeamSlot = {
   slotNumber: number
-  pokemonId: string | null
   pokemon?: TeamPokemon
 }
 
@@ -19,27 +17,19 @@ type BuilderTeamSummary = {
 type UseBuilderTeamReturn = {
   slots: BuilderTeamSlot[]
   summary: BuilderTeamSummary
-  isLoading: boolean
-  error: string | null
   removePokemonFromSlot: (index: number) => void
   clearTeam: () => void
 }
 
 export function useBuilderTeam(): UseBuilderTeamReturn {
   const { slots, removePokemonFromSlot, clearTeam } = useBuilderStore()
-  const { data: pokemonList = [], isLoading, error } = usePokemonList()
-
-  const pokemonMap = useMemo(() => {
-    return new Map(pokemonList.map((pokemon) => [pokemon.id, pokemon]))
-  }, [pokemonList])
 
   const enrichedSlots = useMemo<BuilderTeamSlot[]>(() => {
-    return slots.map((pokemonId, index) => ({
+    return slots.map((pokemon, index) => ({
       slotNumber: index + 1,
-      pokemonId,
-      pokemon: pokemonId ? pokemonMap.get(pokemonId) : undefined
+      pokemon: pokemon ? pokemon : undefined
     }))
-  }, [slots, pokemonMap])
+  }, [slots])
 
   const summary = useMemo<BuilderTeamSummary>(() => {
     const selectedPokemons = enrichedSlots
@@ -62,8 +52,6 @@ export function useBuilderTeam(): UseBuilderTeamReturn {
   return {
     slots: enrichedSlots,
     summary,
-    isLoading,
-    error: error ? error.message : null,
     removePokemonFromSlot,
     clearTeam
   }

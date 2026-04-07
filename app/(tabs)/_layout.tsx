@@ -10,7 +10,6 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: '#5b8cff',
         tabBarInactiveTintColor: '#a9b1bc',
-
         tabBarStyle: {
           backgroundColor: '#0f1115',
           borderTopWidth: 1,
@@ -18,17 +17,6 @@ export default function TabsLayout() {
           height: 60,
           paddingTop: 2
         },
-        // tabBarStyle: {
-        //   position: 'absolute',
-        //   left: 16,
-        //   right: 16,
-        //   bottom: 16,
-        //   height: 64,
-        //   borderRadius: 20,
-        //   backgroundColor: '#081224',
-        //   borderTopWidth: 0,
-        //   elevation: 0
-        // },
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '600'

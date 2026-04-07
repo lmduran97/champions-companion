@@ -49,24 +49,28 @@ export function TeamSlotCardDetail({
         </View>
       </View>
       <Text className='text-small text-text-secondary mt-2'>
-        {slot.battleConfig?.ability?.name ?? 'No ability selected'}
+        {slot.battleConfig.nature
+          ? slot.battleConfig.nature?.name.charAt(0).toUpperCase() +
+            slot.battleConfig.nature?.name.slice(1)
+          : 'No nature selected'}
       </Text>
       <Text className='text-small text-text-secondary mt-2'>
-        {slot.battleConfig?.heldItem ?? 'No item selected'}
+        {slot.battleConfig.ability?.name ?? 'No ability selected'}
+      </Text>
+      <Text className='text-small text-text-secondary mt-2'>
+        {slot.battleConfig.heldItem?.name ?? 'No item selected'}
       </Text>
       <View className='mt-2 flex-row flex-wrap gap-1'>
-        {!(slot.battleConfig?.moves && slot.battleConfig.moves.length > 0) ? (
+        {!(slot.battleConfig.moves && slot.battleConfig.moves.length > 0) ? (
           <Text className='text-small text-text-secondary'>
             No moves selected
           </Text>
         ) : (
-          (slot.battleConfig?.moves ?? [])
-            .filter(Boolean)
-            .map((move, index) => (
-              <Text key={index} className='text-small text-text-secondary'>
-                • {move?.name ?? 'Empty Move'}
-              </Text>
-            ))
+          (slot.battleConfig.moves ?? []).filter(Boolean).map((move, index) => (
+            <Text key={index} className='text-small text-text-secondary'>
+              • {move?.name ?? 'Empty Move'}
+            </Text>
+          ))
         )}
       </View>
     </TouchableOpacity>

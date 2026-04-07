@@ -2,35 +2,18 @@ import { router } from 'expo-router'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 
 import { PokemonSelectorModal } from '@/src/components/builder'
-import { EmptyState, LoadingView, Screen } from '@/src/components/common'
+import { Screen } from '@/src/components/common'
 import { TeamSlotCard, TeamSummary } from '@/src/components/team'
 import { useBuilderState } from '@/src/features/builder/hooks/useBuilderState'
 import { useBuilderTeam } from '@/src/features/builder/hooks/useBuilderTeam'
 import { useState } from 'react'
 
 export default function BuilderScreen() {
-  const { slots, summary, isLoading, error, removePokemonFromSlot, clearTeam } =
-    useBuilderTeam()
+  const { slots, summary, removePokemonFromSlot, clearTeam } = useBuilderTeam()
   const { isEmpty } = useBuilderState()
 
   const [isPokemonSelectorModalVisible, setPokemonSelectorModalVisible] =
     useState(false)
-
-  if (isLoading) {
-    return (
-      <Screen>
-        <LoadingView message='Loading Team Builder...' />
-      </Screen>
-    )
-  }
-
-  if (error) {
-    return (
-      <Screen>
-        <EmptyState title='Something went wrong' description={error} />
-      </Screen>
-    )
-  }
 
   const handleGoToSave = () => {
     if (isEmpty) {
@@ -84,16 +67,18 @@ export default function BuilderScreen() {
       <View className='mt-4 flex-1'>
         <FlatList
           data={slots}
-          keyExtractor={(item) => item.pokemonId || `empty-${item.slotNumber}`}
+          keyExtractor={(item) =>
+            item.pokemon?.id || `empty-${item.slotNumber}`
+          }
           contentContainerStyle={{ paddingBottom: 24 }}
           ItemSeparatorComponent={() => <View className='h-3' />}
           renderItem={({ item }) => (
             <TeamSlotCard
-              key={item.slotNumber}
+              key={item.pokemon?.id || item.slotNumber}
               slotNumber={item.slotNumber}
               pokemon={item.pokemon}
               onRemove={
-                item.pokemonId
+                item.pokemon?.id
                   ? () => removePokemonFromSlot(item.slotNumber - 1)
                   : undefined
               }

@@ -3,13 +3,10 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { router } from 'expo-router'
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
 
-import { TeamPokemon } from '@/src/domain/pokemon/types'
 import type { SavedTeam } from '@/src/domain/team/types'
 
 type SavedTeamCardProps = {
   team: SavedTeam
-  selectedCount: number
-  previewSlots: (TeamPokemon | null)[]
   onLoad: () => void
   onRename: () => void
   onDelete: () => void
@@ -17,12 +14,14 @@ type SavedTeamCardProps = {
 
 export function SavedTeamCard({
   team,
-  selectedCount,
-  previewSlots,
   onLoad,
   onRename,
   onDelete
 }: SavedTeamCardProps) {
+  if (!team.pokemons || team.pokemons.length === 0) {
+    return null
+  }
+
   return (
     <View className='rounded-card border border-border bg-card p-4'>
       <View className='flex-1 flex-row items-center justify-between'>
@@ -38,7 +37,8 @@ export function SavedTeamCard({
       </View>
 
       <Text className='mt-2 text-body text-text-secondary'>
-        {selectedCount} / 6 Pokémon
+        {team.pokemons.filter((pokemon) => pokemon?.id != null).length} / 6
+        Pokémon
       </Text>
 
       <Text className='mt-1 text-caption text-text-muted'>
@@ -46,14 +46,14 @@ export function SavedTeamCard({
       </Text>
 
       <View className='mt-4 flex-row items-center justify-between'>
-        {previewSlots.length === 0 ? (
+        {team.pokemons.length === 0 ? (
           <Text className='text-body text-text-muted'>
             No Pokémon in this team
           </Text>
         ) : (
           <FlatList
-            data={previewSlots}
-            keyExtractor={(item, index) => team.id + '-' + index}
+            data={team.pokemons}
+            keyExtractor={(item) => team.id + '-' + item?.id}
             scrollEnabled={false}
             numColumns={3}
             columnWrapperStyle={{ gap: 32, marginBottom: 28 }}

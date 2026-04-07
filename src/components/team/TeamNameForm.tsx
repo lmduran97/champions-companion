@@ -36,7 +36,7 @@ export function TeamNameForm({
             onChangeText={onChangeText}
             placeholder='Enter a team name'
             placeholderTextColor='#7E8794'
-            autoCapitalize='words'
+            autoCapitalize='sentences'
             autoCorrect={false}
             className='text-body text-text-primary'
           />

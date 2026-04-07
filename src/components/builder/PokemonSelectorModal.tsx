@@ -10,7 +10,7 @@ import {
   View
 } from 'react-native'
 
-import { Pokemon } from '@/src/domain/pokemon/types'
+import { Pokemon, TeamPokemon } from '@/src/domain/pokemon/types'
 import { usePokemonList } from '@/src/features/pokedex/hooks/usePokemonList'
 import { useBuilderStore } from '@/src/store/useBuilderStore'
 import { EmptyState, LoadingView, SearchInput } from '../common'
@@ -30,10 +30,10 @@ export function PokemonSelectorModal({
 
   const sortedPokemon = useMemo(() => {
     const pokemonInTeam = pokemon.filter((p) =>
-      slots.some((slot) => slot === p.id)
+      slots.some((slot) => slot?.id === p.id)
     )
     const pokemonNotInTeam = pokemon.filter(
-      (p) => !slots.some((slot) => slot === p.id)
+      (p) => !slots.some((slot) => slot?.id === p.id)
     )
     return [...pokemonNotInTeam, ...pokemonInTeam]
   }, [pokemon, slots])
@@ -48,7 +48,30 @@ export function PokemonSelectorModal({
       return
     }
 
-    const result = addPokemonToFirstEmptySlot(selectedPokemon.id)
+    const pokemonWithConfig = {
+      id: selectedPokemon.id,
+      name: selectedPokemon.name,
+      types: selectedPokemon.types,
+      spriteUrl: selectedPokemon.spriteUrl,
+      artworkUrl: selectedPokemon.artworkUrl,
+      abilities: selectedPokemon.abilities,
+      moves: selectedPokemon.moves,
+      battleConfig: {
+        nature: null,
+        ability: null,
+        heldItem: null,
+        moves: [null, null, null, null],
+        statPoints: {
+          hp: 0,
+          attack: 0,
+          defense: 0,
+          specialAttack: 0,
+          specialDefense: 0,
+          speed: 0
+        }
+      }
+    } as TeamPokemon
+    const result = addPokemonToFirstEmptySlot(pokemonWithConfig)
 
     if (!result.ok) {
       return Alert.alert('Error', 'Could not add Pokémon to team.')
@@ -126,7 +149,9 @@ export function PokemonSelectorModal({
                     <View className='w-[48%]'>
                       <PokemonSelectorCard
                         pokemon={item}
-                        isAlreadyInTeam={slots.some((slot) => slot === item.id)}
+                        isAlreadyInTeam={slots.some(
+                          (slot) => slot?.id === item.id
+                        )}
                         onSelect={() => handleAddToTeam(item)}
                       />
                     </View>

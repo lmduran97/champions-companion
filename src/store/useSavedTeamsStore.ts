@@ -3,15 +3,17 @@ import { persist } from 'zustand/middleware'
 
 import { zustandStorage } from '@/src/data/storage/zustandStorage'
 import type { SavedTeam } from '@/src/domain/team/types'
+import { TeamPokemon } from '../domain/pokemon/types'
 import { normalizeTeamName } from '../domain/team/utils'
 
 type SavedTeamsState = {
   teams: SavedTeam[]
   hasHydrated: boolean
   setHasHydrated: (value: boolean) => void
-  saveCurrentTeam: (name: string, pokemonIds: (string | null)[]) => boolean
+  saveNewTeam: (name: string, pokemons: (TeamPokemon | null)[]) => boolean
   renameTeam: (teamId: string, newName: string) => boolean
   deleteTeam: (teamId: string) => void
+  updateTeam: (teamId: string, pokemons: (TeamPokemon | null)[]) => void
 }
 
 export const useSavedTeamsStore = create<SavedTeamsState>()(
@@ -21,7 +23,7 @@ export const useSavedTeamsStore = create<SavedTeamsState>()(
 
       hasHydrated: false,
       setHasHydrated: (value) => set({ hasHydrated: value }),
-      saveCurrentTeam: (name, pokemonIds) => {
+      saveNewTeam: (name, pokemons) => {
         const trimmedName = name.trim()
 
         if (!trimmedName) {
@@ -42,7 +44,7 @@ export const useSavedTeamsStore = create<SavedTeamsState>()(
         const newTeam: SavedTeam = {
           id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
           name: trimmedName,
-          pokemonIds: [...pokemonIds],
+          pokemons: [...pokemons],
           createdAt: now,
           updatedAt: now
         }
@@ -90,6 +92,20 @@ export const useSavedTeamsStore = create<SavedTeamsState>()(
       deleteTeam: (teamId) => {
         set({
           teams: get().teams.filter((team) => team.id !== teamId)
+        })
+      },
+
+      updateTeam: (teamId, pokemons) => {
+        set({
+          teams: get().teams.map((team) =>
+            team.id === teamId
+              ? {
+                  ...team,
+                  pokemons: [...pokemons],
+                  updatedAt: new Date().toISOString()
+                }
+              : team
+          )
         })
       }
     }),

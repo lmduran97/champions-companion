@@ -5,11 +5,13 @@ import { Alert } from 'react-native'
 import { Screen } from '@/src/components/common/Screen'
 import { TeamNameForm } from '@/src/components/team'
 import { useBuilderState } from '@/src/features/builder/hooks/useBuilderState'
+import { useBuilderStore } from '@/src/store/useBuilderStore'
 import { useSavedTeamsStore } from '@/src/store/useSavedTeamsStore'
 
 export default function SaveTeamScreen() {
   const { slots, isEmpty } = useBuilderState()
-  const { saveCurrentTeam } = useSavedTeamsStore()
+  const { clearTeam } = useBuilderStore()
+  const { saveNewTeam } = useSavedTeamsStore()
 
   const [teamName, setTeamName] = useState('')
 
@@ -26,12 +28,13 @@ export default function SaveTeamScreen() {
       return
     }
 
-    const wasSaved = saveCurrentTeam(trimmedName, slots)
+    const wasSaved = saveNewTeam(trimmedName, slots)
     if (!wasSaved) {
       Alert.alert('Name already in use', 'Choose a different team name.')
       return
     }
 
+    clearTeam()
     Alert.alert('Team saved', `"${trimmedName}" was saved successfully.`, [
       {
         text: 'OK',
